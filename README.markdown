@@ -8,3 +8,5 @@ To use the script use command like in the following example (use proper sql clie
     ./queue_log2sql_insert.sh /var/log/asterisk/queue_log 2>/null | psql -U postgres asterisk
 
 Postgresql and MySQL are supported both... I hope 
+
+Create database table as described on voip-info.org before firs run.

@@ -5,6 +5,6 @@ If we plan to use the real-time monitoring features, we must upload data to MySQ
 To use the script use command like in the following example (use proper sql client and credentials):
 
 
->> ./queue_log2sql_insert.sh /var/log/asterisk/queue_log 2>/null | psql -U postgres asterisk
+    ./queue_log2sql_insert.sh /var/log/asterisk/queue_log 2>/null | psql -U postgres asterisk
 
-Postgresql and MySQL are supperted both... I hope 
+Postgresql and MySQL are supported both... I hope 

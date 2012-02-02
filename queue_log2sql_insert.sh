@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#LOG='/var/log/asterisk/queue_log'
 LOG=${1}
 
 inotifywait -mq -e modify ${LOG} | while read file; do tail -1 ${LOG} | awk -vd="'" -F '|' \

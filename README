@@ -1,0 +1,1 @@
+./queue_log2sql_insert.sh /var/log/asterisk/queue_log 2>/null | psql -U postgres asterisk

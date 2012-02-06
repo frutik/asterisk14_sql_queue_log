@@ -13,6 +13,7 @@ import ConfigParser
 config = ConfigParser.ConfigParser()
 config.read('config.ini')
 
+from sqlobject import *
 connection = connectionForURI(config.get('SQL', 'dsn'))
 sqlhub.processConnection = connection
 

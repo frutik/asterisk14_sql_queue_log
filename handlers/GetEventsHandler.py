@@ -2,6 +2,16 @@ import tornado.web
 import tornado
 import time
 
+from sqlobject import *
+
+class QueueLog(SQLObject):
+    time = StringCol()
+    callid = StringCol()
+    queuename = StringCol()
+    agent = StringCol()
+    event = StringCol()
+    data = StringCol()
+
 class GetEventsHandler(tornado.web.RequestHandler):
 
     schedule_time = 0.2
@@ -9,7 +19,7 @@ class GetEventsHandler(tornado.web.RequestHandler):
 
     @tornado.web.asynchronous
     def get(self, last_event_id):
-        self.last_event_id = last_event_id
+        self.last_event_id = int(last_event_id)
         self.schedule_execution(self.schedule_time, self.loop)
 
     def schedule_execution(self, schedule_time, callback):
@@ -17,23 +27,19 @@ class GetEventsHandler(tornado.web.RequestHandler):
 
     def loop(self):
         tornado.ioloop.IOLoop.instance().remove_timeout(self.handle)
+	
+	try:                                                                                                                                                                                   
+	    events = QueueLog.select(QueueLog.q.id > self.last_event_id).orderBy('id').limit(1)
+	
+	except:                                                                                                                                                                 
+	    self.schedule_execution(self.schedule_time, self.loop)
+	    return 
+	
+	event = events[0]
 
-        self.write('test' + self.last_event_id)
+	print event
+	    
+    	self.write(event.event)
+    	self.finish()
 
-        self.finish()
-#        session = self._get_session()
-#
-#        if session:
-#            message = session.queue_next()
-#
-#            if message:
-#                self.finish_with_message(message)
-#            else:
-#                if time.time() - self.start_time < self.timeout:
-#                    self.schedule_execution(self.time_schedule, self.loop)
-#                else:
-#                    status = Status()
-#                    status.message = 'Timeout'
-#
-#                    self.finish_with_message(status)
-
+    

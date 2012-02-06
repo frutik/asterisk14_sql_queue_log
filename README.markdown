@@ -9,4 +9,4 @@ To use the script use command like in the following example (use proper sql clie
 
 Postgresql and MySQL are supported both... I hope 
 
-Create database table as described on voip-info.org before firs run.
+Create database table as described on voip-info.org before first run.

@@ -8,6 +8,14 @@ from handlers.GetEventsHandler import GetEventsHandler
 import os.path
 import uuid
 
+import ConfigParser
+
+config = ConfigParser.ConfigParser()
+config.read('config.ini')
+
+connection = connectionForURI(config.get('SQL', 'dsn'))
+sqlhub.processConnection = connection
+
 http_settings = dict(
     cookie_secret=str(uuid.uuid1()),
     template_path=os.path.join(os.path.dirname(__file__), "templates"),

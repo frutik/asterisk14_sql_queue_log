@@ -30,25 +30,25 @@ class GetEventsHandler(tornado.web.RequestHandler):
     def loop(self):
         tornado.ioloop.IOLoop.instance().remove_timeout(self.handle)
 	
-	try:                                                                                                                                                                                   
-	    events = QueueLog.select(QueueLog.q.id > self.last_event_id).orderBy('id').limit(1)
-	
-	except:                                                                                                                                                                 
-	    self.schedule_execution(self.schedule_time, self.loop)
-	    return 
-	
-	event = events[0]
+        try:
+            events = QueueLog.select(QueueLog.q.id > self.last_event_id).orderBy('id').limit(1)
 
-	print event
-	    
-    self.write(json.dumps({
-        'id': event.id,
-        'callid': event.callid,
-        'queuename': event.queuename,
-        'agent': event.agent,
-        'event': event.event,
-        'data': event.data
-    }))
+        except:
+            self.schedule_execution(self.schedule_time, self.loop)
+            return
 
-    self.finish()
+        event = events[0]
+
+        print event
+
+        self.write(json.dumps({
+            'id': event.id,
+            'callid': event.callid,
+            'queuename': event.queuename,
+            'agent': event.agent,
+            'event': event.event,
+            'data': event.data
+        }))
+
+        self.finish()
 

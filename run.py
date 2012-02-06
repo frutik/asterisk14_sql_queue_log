@@ -25,7 +25,7 @@ http_settings = dict(
     autoescape="xhtml_escape",
 )
 
-define("port", default=8888, help="run on the given port", type=int)
+define("port", default=8889, help="run on the given port", type=int)
 
 import logging
 logging.basicConfig(level=logging.INFO)

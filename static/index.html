@@ -1,0 +1,23 @@
+<html>
+<head>
+<script type="text/javascript" src='js/jquery-1.7.1.min.js'></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    // is connected???
+    
+    (function poll(){
+        $.ajax({ url: "http://172.22.90.13:9003/getevents/123", success: function(data){
+                //Update your dashboard gauge
+		    alert(data);
+                        
+        }, dataType: "json", complete: poll, timeout: 30000 });
+    })();
+    
+});
+
+</script>
+
+</head>
+<body></body>
+</html>

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOCKFILE='/var/lock/queue_log.lock'
+LOCKFILE='/var/lock/supervisor/queue_log.lock'
 
 if [ ! -e $LOCKFILE ]; then
    trap "rm -f $LOCKFILE; exit" INT TERM EXIT

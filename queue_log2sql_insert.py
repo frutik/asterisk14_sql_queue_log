@@ -7,9 +7,16 @@ import time
 from sqlobject import *
 
 SEPARATOR = "|"
-DSN = 'postgres://postgres@/asterisk'
+LOCK_DIR = "/tmp/"
 
-lockfile = os.path.normpath('/tmp/' + os.path.basename(__file__).replace('.py', '') + '.lock')
+try:
+    log_file = open(sys.argv[1])
+    dsn = sys.argv[2]
+except:
+    print "Usage: %s logfile_path 'dsn'" % sys.argv[0]
+    sys.exit(-1)
+
+lockfile = os.path.normpath(LOCK_DIR + os.path.basename(__file__).replace('.py', '') + '.lock')
 exclusive_lock = open(lockfile, 'w')
 
 try:
@@ -19,13 +26,6 @@ except IOError:
     time.sleep(1)
     sys.exit(-1)
 
-try:
-    log_file = open(sys.argv[1])
-except:
-    print "Usage: %s logfile_path" % sys.argv[0]
-    sys.exit(-1)
-
-
 class QueueLog(SQLObject):
     time = StringCol()
     callid = StringCol()
@@ -34,7 +34,7 @@ class QueueLog(SQLObject):
     event = StringCol()
     data = StringCol()
 
-connection = connectionForURI(DSN)
+connection = connectionForURI(dsn)
 sqlhub.processConnection = connection
 
 for line in tailer.follow(log_file):

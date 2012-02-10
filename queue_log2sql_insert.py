@@ -4,6 +4,10 @@ import tailer
 import fcntl
 import os, sys
 import time
+from sqlobject import *
+
+SEPARATOR = "|"
+DSN = 'postgres://postgres@/asterisk'
 
 lockfile = os.path.normpath('/tmp/' + os.path.basename(__file__).replace('.py', '') + '.lock')
 exclusive_lock = open(lockfile, 'w')
@@ -21,9 +25,31 @@ except:
     print "Usage: %s logfile_path" % sys.argv[0]
     sys.exit(-1)
 
-SEPARATOR="|"
+
+class QueueLog(SQLObject):
+    time = StringCol()
+    callid = StringCol()
+    queuename = StringCol()
+    agent = StringCol()
+    event = StringCol()
+    data = StringCol()
+
+connection = connectionForURI(DSN)
+sqlhub.processConnection = connection
 
 for line in tailer.follow(log_file):
     t = line.split(SEPARATOR)
-    print "insert into queue_log (time, callid, queuename, agent, event, data) values ('%s', '%s', '%s', '%s', '%s', '%s');" % (t[0],t[1],t[2],t[3],t[4],SEPARATOR.join(t[5:]))
+
+    print t
+    
+    QueueLog(
+	time = t[0], 
+	callid = t[1],
+	queuename = t[2],
+	agent = t[3],
+	event = t[4],
+	data = SEPARATOR.join(t[5:])
+    )
+
+
     

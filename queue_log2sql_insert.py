@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import pyinotify
+import tailer
 import fcntl
 import os, sys
 import time
@@ -16,21 +16,10 @@ except IOError:
     sys.exit(-1)
 
 try:
-    log_file = sys.argv[1]
+    log_file = open(sys.argv[1])
 except:
     print "Usage: %s logfile_path" % sys.argv[0]
     sys.exit(-1)
 
-wm = pyinotify.WatchManager()
-mask = pyinotify.IN_MODIFY
-
-class EventHandler(pyinotify.ProcessEvent):
-    def process_IN_MODIFY(self, event):
-        print event
- 
-handler = EventHandler()
-notifier = pyinotify.Notifier(wm, handler)
-wdd = wm.add_watch(log_file, mask, rec=True)
-
-notifier.loop()
-
+for line in tailer.follow(log_file):
+    print line
